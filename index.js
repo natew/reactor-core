@@ -1,8 +1,7 @@
-var React      = require('react');
 var ReactAsync = require('react-async');
 var ReactMount = require('react/lib/ReactMount');
-var Router     = require('./mixins/router');
-var PushState  = require('./mixins/pushState');
+var Router     = require('reactor-router');
+var PushState  = require('reactor-pushState');
 var Superagent = require('superagent');
 var Cortex     = require('cortexjs');
 var isBrowser  = (typeof window !== 'undefined');
@@ -33,11 +32,13 @@ var Reactor = {
       routes: spec.routes,
 
       componentWillMount: function() {
+        console.log('mount')
         if (!this.props.debug && this.props.env === 'production')
           require('react-raf-batching').inject(); // faster in prod
       },
 
       getInitialStateAsync: function(cb) {
+        console.log('init state')
         this.setRoute(this.props.path);
         this.getStateFromPage(cb);
       },
@@ -52,6 +53,7 @@ var Reactor = {
         var root = this.rootUrl()
         var route = this.route;
         var page = route.page;
+        console.log('get state')
 
         if (!page.props) cb(null, {});
         else page.props(root, route.params, function(data) {
@@ -64,6 +66,7 @@ var Reactor = {
       },
 
       render: function() {
+        console.log('render')
         this.pageTitle = this.state.title;
         this.pageData = new Cortex(this.state.pageData, this.route.page.update);
         return spec.render.call(this, this.route.page);
@@ -109,6 +112,7 @@ var ReactorCore = {
     return function(root, params, cb) {
       if (typeof params == 'object')
         path = this.replaceParams(path, params);
+      console.log('getting', root, path, params)
 
       if (this.cache[path])
         cb(this.cache[path]);
