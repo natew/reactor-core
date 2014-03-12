@@ -3,7 +3,6 @@ var ReactMount = require('react/lib/ReactMount');
 var Router     = require('reactor-router');
 var PushState  = require('reactor-pushState');
 var Superagent = require('superagent');
-var Cortex     = require('cortexjs');
 var isBrowser  = (typeof window !== 'undefined');
 
 ReactMount.allowFullPageRender = true;
@@ -63,8 +62,6 @@ var Reactor = {
       },
 
       render: function() {
-        this.pageTitle = this.state.title;
-        this.pageData = new Cortex(this.state.pageData, this.route.page.update);
         return spec.render.call(this, this.route.page);
       }
 

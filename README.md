@@ -4,7 +4,6 @@ It uses the following modules to achieve this:
 - Routing: [reactor-router](https://github.com/natew/reactor-router)
 - HTML5 pushState: [reactor-pushState](https://github.com/natew/reactor-pushState)
 - Async data fetch: [react-async](https://github.com/andreypopp/react-async)
-- State management: [Cortex](https://github.com/kaelzhang/cortex)
 
 Check out a demo of it in use [in this repo](https://github.com/natew/reactor-demo).
 
@@ -12,6 +11,7 @@ Basic usage:
 
     var React      = require('react');
     var Reactor    = require('reactor-core').inject(React);
+    var Layout     = require('./layouts/myHTMLLayout');
 
     var App = Reactor.createClass({
 
@@ -21,8 +21,8 @@ Basic usage:
 
       render: function(Page) {
         return this.transferPropsTo(
-          <Layout onClick={this.navigate} title={this.pageTitle}>
-            <Page data={this.pageData} className="page" />
+          <Layout onClick={this.navigate} title={this.state.title}>
+            <Page data={this.state.pageData} className="page" />
           </Layout>
         );
       }
