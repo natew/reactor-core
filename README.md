@@ -11,7 +11,7 @@ Check out a demo of it in use [in this repo](https://github.com/natew/reactor-de
 Basic usage:
 
     var React      = require('react');
-    var Reactor    = require('reactor').inject(React);
+    var Reactor    = require('reactor-core').inject(React);
 
     var App = Reactor.createClass({
 
