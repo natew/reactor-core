@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "A small library for creating isomorphic apps in React"
+    "url": "git@github.com:natew/reactor-core.git"
   },
   "keywords": [
     "React",
