@@ -1,6 +1,6 @@
 {
   "name": "reactor-core",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A small library to help create isomorphic apps in React",
   "main": "index.js",
   "scripts": {

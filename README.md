@@ -42,6 +42,8 @@ Reactor comes with a simple middleware to help you render your app. You can use 
 
     Server.use(reactorMiddleware({
       app: App,
+      injectBefore: '<!doctype>', // default
+      injectAfter: '', // default
       props: {
         // props to pass to your top level component
       }
