@@ -1,7 +1,7 @@
 {
   "name": "reactor-core",
-  "version": "0.0.4",
-  "description": "A small library for creating isomorphic apps in React",
+  "version": "0.1.0",
+  "description": "A small library to help create isomorphic apps in React",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
