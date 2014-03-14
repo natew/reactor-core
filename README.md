@@ -40,10 +40,8 @@ Reactor comes with a simple middleware to help you render your app. You can use 
     var Server = express();
     var App = require('./app'); // top level react component
 
-    Server.use(reactorMiddleware({
-      app: App,
-      injectBefore: '<!doctype>', // default
-      injectAfter: '', // default
+    Server.use(reactorMiddleware(App, {
+      wrapper: function(markup) { return '<!doctype>' + markup }, // default
       props: {
         // props to pass to your top level component
       }

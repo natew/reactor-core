@@ -3,6 +3,7 @@ var ReactMount = require('react/lib/ReactMount');
 var Router     = require('reactor-router');
 var PushState  = require('reactor-pushState');
 var Superagent = require('superagent');
+var Cortex     = require('cortexjs');
 var isBrowser  = (typeof window !== 'undefined');
 
 ReactMount.allowFullPageRender = true;
@@ -13,14 +14,19 @@ var Reactor = {
     if (!isBrowser) return;
     window.React = React;
     window.onload = function() {
-      React.renderComponent(App(), document);
-    }
+      Reactor.activePage = React.renderComponent(App(), document);
+    };
+  },
+
+  updateData: function(data) {
+    console.log('update with', data);
+    Reactor.activePage.setProps({ data: data });
   },
 
   createClass: function(spec) {
     Router.setRoutes(spec.routes);
 
-    return React.createClass({
+    var reactorSpec = {
       mixins: [
         Router,
         PushState,
@@ -29,6 +35,10 @@ var Reactor = {
 
       statics: spec.statics,
       routes: spec.routes,
+
+      shouldComponentUpdate: function() {
+        this.shouldUpdate;
+      },
 
       componentWillMount: function() {
         if (!this.props.debug && this.props.env === 'production')
@@ -51,21 +61,37 @@ var Reactor = {
         var route = this.route;
         var page = route.page;
 
-        if (!page.props) cb(null, {});
+        if (!page.props) cb(null, { data: null });
         else page.props(root, route.params, function(data) {
           var t = page.title;
-          cb(null, {
-            pageData: data,
+          var state = {
+            data: data,
             title: typeof t == 'function' ? t(data) : t
-          });
+          };
+
+          if (spec.getInitialState) {
+            var specState = spec.getInitialState();
+            for (var key in specState)
+              if (specState.hasOwnProperty(key))
+                state[key] = specState[key]
+          }
+
+          cb(null, state);
         });
       },
 
       render: function() {
-        return spec.render.call(this, this.route.page);
+        var data = new Cortex(this.state.data, Reactor.updateData);
+        return spec.render.call(this, this.route.page, data);
       }
 
-    });
+    };
+
+    for (var key in spec)
+      if (spec.hasOwnProperty(key) && ['render', 'getInitialState'].indexOf(key) === -1)
+        reactorSpec[key] = spec[key];
+
+    return React.createClass(reactorSpec);
   },
 
   inject: function(react) {
@@ -74,7 +100,7 @@ var Reactor = {
     react.createAppClass = ReactorCore.createPage;
     react.getStateFromPage = ReactorCore.getStateFromPage;
     react.isBrowser = isBrowser;
-    return Reactor;
+    return this;
   }
 
 };

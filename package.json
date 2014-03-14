@@ -1,6 +1,6 @@
 {
   "name": "reactor-core",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "A small library to help create isomorphic apps in React",
   "main": "index.js",
   "scripts": {
@@ -25,7 +25,7 @@
     "react": "~0.9.0",
     "url-pattern": "~0.5.0",
     "reactor-pushstate": "~0.0.1",
-    "reactor-router": "~0.0.1",
+    "reactor-router": "~0.1.0",
     "react-raf-batching": "~0.9.0"
   }
 }
