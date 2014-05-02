@@ -16,15 +16,21 @@ var Reactor = {
     window.onload = function() {
       Reactor.activePage = React.renderComponent(App(), document);
     };
+
+    if (isBrowser && App.gss_worker)
+      window.GSS_CONFIG = { worker: App.gss_worker };
   },
 
   updateData: function(data) {
-    console.log('update with', data);
     Reactor.activePage.setProps({ data: data });
   },
 
   createClass: function(spec) {
-    Router.setRoutes(spec.routes);
+    if (spec.routes)
+      Router.setRoutes(spec.routes);
+    else if (spec.pages) {
+
+    }
 
     var reactorSpec = {
       mixins: [
@@ -60,21 +66,31 @@ var Reactor = {
         var root = this.rootUrl()
         var route = this.route;
         var page = route.page;
+        var params = route.params;
 
-        if (!page.props) cb(null, { data: null });
-        else page.props(root, route.params, function(data) {
-          var t = page.title;
+        if (!page.setProps) cb(null, { data: null });
+        else page.setProps(root, params, function(data) {
           var state = {
             data: data,
-            title: typeof t == 'function' ? t(data) : t
+            head: {}
           };
 
-          if (spec.getInitialState) {
-            var specState = spec.getInitialState();
-            for (var key in specState)
-              if (specState.hasOwnProperty(key))
-                state[key] = specState[key]
-          }
+          // Set head properties
+          for (var key in page.head) {
+            var headProp = page.head[key];
+            var value = typeof headProp == 'function' ?
+              headProp(data, params) :
+              headProp;
+
+            state.head[key] = value;
+          };
+
+          // if (spec.getInitialState) {
+          //   var specState = spec.getInitialState();
+          //   for (var key in specState)
+          //     if (specState.hasOwnProperty(key))
+          //       state[key] = specState[key];
+          // }
 
           cb(null, state);
         });
@@ -113,7 +129,7 @@ var ReactorCore = {
     var reactSpec = {
       statics: {
         title: spec.title,
-        props: ReactorCore.get(spec.fetch, spec.getInitialProps),
+        setProps: ReactorCore._fetchForProps(spec.fetch, spec.getInitialProps),
         update: spec.update || function() {}
       }
     };
@@ -127,10 +143,10 @@ var ReactorCore = {
 
   cache: {},
 
-  get: function(path, pageCb) {
+  _fetchForProps: function(path, pageCb) {
     return function(root, params, cb) {
       if (typeof params == 'object')
-        path = this.replaceParams(path, params);
+        path = this._replaceParams(path, params);
 
       if (this.cache[path])
         cb(this.cache[path]);
@@ -152,7 +168,7 @@ var ReactorCore = {
     }.bind(this);
   },
 
-  replaceParams: function(url, params) {
+  _replaceParams: function(url, params) {
     var paramKeys = Object.keys(params);
 
     paramKeys.map(function(param) {
