@@ -66,9 +66,11 @@ var Reactor = {
 
         if (!page.setProps) cb(null, { data: null });
         else page.setProps(root, params, function(data) {
+          var t = page.title;
           var state = {
             data: data,
-            head: {}
+            head: {},
+            title: typeof t == 'function' ? t(data) : t
           };
 
           // Set head properties
