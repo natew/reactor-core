@@ -1,9 +1,9 @@
-This is a small but (at this point) fairly opinionated module that should let you get up and running with a React app quickly.
+This is a small but fairly opinionated module that should let you get up and running with a React app quickly.
 
 It uses the following modules to achieve this:
 - Routing: [reactor-router](https://github.com/natew/reactor-router)
 - HTML5 pushState: [reactor-pushState](https://github.com/natew/reactor-pushState)
-- Async data fetch: [react-async](https://github.com/andreypopp/react-async)
+- Async data fetching: [react-async](https://github.com/andreypopp/react-async)
 
 Check out a demo of it in use [in this repo](https://github.com/natew/reactor-demo).
 
@@ -41,9 +41,9 @@ Reactor comes with a simple middleware to help you render your app. You can use 
     var App = require('./app'); // top level react component
 
     Server.use(reactorMiddleware(App, {
-      wrapper: function(markup) { return '<!doctype>' + markup }, // default
-      props: {
-        // props to pass to your top level component
+      wrapper: function(markup) { return '<!doctype>' + markup },
+      props: { // props to pass to your top level component
+        baseUrl: 'http://example.com'
       }
     }))
     .listen(3000);
@@ -51,7 +51,7 @@ Reactor comes with a simple middleware to help you render your app. You can use 
 
 ### Warning
 
-This is all very early stages and is just being extracted into it's own module so things will change. More documentation to come!
+This is all very early stages, things will change.
 
 ### License
 
