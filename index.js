@@ -3,8 +3,13 @@ var ReactMount = require('react/lib/ReactMount');
 var Router     = require('reactor-router');
 var PushState  = require('reactor-pushState');
 var Superagent = require('superagent');
-var Cortex     = require('cortexjs');
 var isBrowser  = (typeof window !== 'undefined');
+
+// Reactor provides a top level class for building React apps
+// Allows for:
+//   - handling of routes
+//   - async rendering
+//   - pushState navigation
 
 ReactMount.allowFullPageRender = true;
 
@@ -16,11 +21,6 @@ var Reactor = {
     window.onload = function() {
       Reactor.activePage = React.renderComponent(App(), document);
     };
-  },
-
-  updateData: function(data) {
-    console.log('update with', data);
-    Reactor.activePage.setProps({ data: data });
   },
 
   createClass: function(spec) {
@@ -38,11 +38,6 @@ var Reactor = {
 
       shouldComponentUpdate: function() {
         this.shouldUpdate;
-      },
-
-      componentWillMount: function() {
-        if (!this.props.debug && this.props.env === 'production')
-          require('react-raf-batching').inject(); // faster in prod
       },
 
       getInitialStateAsync: function(cb) {
@@ -81,8 +76,7 @@ var Reactor = {
       },
 
       render: function() {
-        var data = new Cortex(this.state.data, Reactor.updateData);
-        return spec.render.call(this, this.route.page, data);
+        return spec.render.call(this, this.route.page, this.state.data);
       }
 
     };
