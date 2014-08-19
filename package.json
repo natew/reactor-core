@@ -1,10 +1,10 @@
 {
   "name": "reactor-core",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "A small library to help create isomorphic apps in React",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha -t 5000 -b -R spec spec.js"
   },
   "repository": {
     "type": "git",
@@ -18,15 +18,18 @@
   "author": "Nate Wienert",
   "license": "MIT",
   "dependencies": {
-    "fibers": "~1.0.1",
-    "superagent": "~0.18",
     "envify": "~1.2",
     "url-pattern": "~0.6",
     "reactor-pushstate": "~0.0.1",
-    "reactor-router": "~0.1.0"
+    "reactor-router": "~0.2.0",
+    "fibers": "~1.0.1"
   },
   "peerDependencies": {
-    "react-async": "~0.9",
-    "react": "~0.10"
+    "react-async": "~1.0.1",
+    "react": "0.10.0 - 0.11.x",
+    "fibers": "~1.0.1"
+  },
+  "devDependencies": {
+    "mocha": "~1.17.1"
   }
 }
